@@ -35,7 +35,7 @@ export default function HomePage() {
         className={`px-4 lg:px-6 h-16 flex items-center border-b border-white/10 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/70 sticky top-0 z-40 transition-all duration-1000 ${isLoaded ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
         <Link className="flex items-center justify-center" href="/">
-          <Image src="/nextok-logo.jpg" alt="NEXTOK Logo" width={120} height={40} className="h-8 w-auto" />
+          <span className="text-brand-gradient text-xl sm:text-2xl font-extrabold tracking-tight">NEXTOK</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
           <Link
