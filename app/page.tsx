@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { ArrowRight, Calendar, Mail, MapPin, MessageCircle, Globe } from "lucide-react"
+import { ArrowRight, Calendar, Mail, MapPin, MessageCircle, Globe, Store, Users, LineChart, ClipboardList } from "lucide-react"
 import TestimonialCarousel from "@/components/testimonial-carousel"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import ContactForm from "@/components/contact-form"
 
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -142,14 +143,9 @@ export default function HomePage() {
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-cyan-500/10 rounded-lg blur-sm"></div>
-                      <Image
-                        alt="TikTok Shop Setup Dashboard"
-                        className="relative rounded-lg object-cover"
-                        height="60"
-                        src="/services/tiktok-shop-icon.webp"
-                        width="60"
-                      />
+                      <div className="relative grid h-14 w-14 place-items-center rounded-lg bg-slate-900/80 ring-1 ring-white/10">
+                        <Store className="h-7 w-7 text-white" />
+                      </div>
                     </div>
                     <div>
                       <CardTitle className="text-slate-900 dark:text-white group-hover:text-cyan-500 transition-all duration-300">
@@ -160,7 +156,7 @@ export default function HomePage() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3 text-slate-600 dark:text-slate-300">
-                                        <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
                       <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Onboarding & compliance</span>
                     </li>
@@ -181,34 +177,29 @@ export default function HomePage() {
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-cyan-500/10 rounded-lg blur-sm"></div>
-                      <Image
-                        alt="Influencer Network"
-                        className="relative rounded-lg object-cover"
-                        height="60"
-                        src="/services/ugc.png"
-                        width="60"
-                      />
+                      <div className="relative grid h-14 w-14 place-items-center rounded-lg bg-slate-900/80 ring-1 ring-white/10">
+                        <Users className="h-7 w-7 text-white" />
+                      </div>
                     </div>
                     <div>
-                      <CardTitle className="text-white group-hover:text-cyan-200 transition-all duration-300">
+                      <CardTitle className="text-slate-900 dark:text-white group-hover:text-cyan-500 transition-all duration-300">
                         Influencer Seeding & UGC
                       </CardTitle>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3 text-pink-100">
-                    <li className="flex items-center gap-3 group-hover:text-white transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-cyan-300 to-yellow-300 rounded-full"></div>
+                  <ul className="space-y-3 text-slate-600 dark:text-slate-300">
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Barter & paid partnerships</span>
                     </li>
-                    <li className="flex items-center gap-3 group-hover:text-white transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-cyan-300 to-yellow-300 rounded-full"></div>
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Content collection</span>
                     </li>
-                    <li className="flex items-center gap-3 group-hover:text-white transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-cyan-300 to-yellow-300 rounded-full"></div>
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Performance tracking</span>
                     </li>
                   </ul>
@@ -216,38 +207,33 @@ export default function HomePage() {
               </Card>
 
               {/* Paid Ads & GMV Scaling */}
-              <Card className="border-white/20 bg-white/10 backdrop-blur shadow-lg hover:shadow-pink-300/20 transition-all duration-500 hover:scale-105 hover:border-cyan-300/50 group">
+              <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group">
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-cyan-500/10 rounded-lg blur-sm"></div>
-                      <Image
-                        alt="Ad Campaign Analytics"
-                        className="relative rounded-lg object-cover"
-                        height="60"
-                        src="/services/paid_ads.png"
-                        width="60"
-                      />
+                      <div className="relative grid h-14 w-14 place-items-center rounded-lg bg-slate-900/80 ring-1 ring-white/10">
+                        <LineChart className="h-7 w-7 text-white" />
+                      </div>
                     </div>
                     <div>
-                      <CardTitle className="text-foreground group-hover:text-cyan-400 transition-all duration-300">
+                      <CardTitle className="text-slate-900 dark:text-white group-hover:text-cyan-500 transition-all duration-300">
                         Paid Ads & GMV Scaling
                       </CardTitle>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3 text-muted-foreground">
-                    <li className="flex items-center gap-3 group-hover:text-foreground transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-pink-400 to-cyan-400 rounded-full"></div>
+                  <ul className="space-y-3 text-slate-600 dark:text-slate-300">
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Max Ads setup</span>
                     </li>
-                    <li className="flex items-center gap-3 group-hover:text-foreground transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-pink-400 to-cyan-400 rounded-full"></div>
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Creative testing</span>
                     </li>
-                    <li className="flex items-center gap-3 group-hover:text-foreground transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-pink-400 to-cyan-400 rounded-full"></div>
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Scaling strategy</span>
                     </li>
                   </ul>
@@ -255,38 +241,33 @@ export default function HomePage() {
               </Card>
 
               {/* Consultations & Audits */}
-              <Card className="border-border bg-card/50 backdrop-blur shadow-lg hover:shadow-cyan-500/10 transition-all duration-500 hover:scale-105 hover:border-cyan-500/30 group">
+              <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group">
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-pink-500/20 rounded-lg blur-sm"></div>
-                      <Image
-                        alt="Strategy Consultation"
-                        className="relative rounded-lg object-cover"
-                        height="60"
-                        src="/services/audit.png"
-                        width="60"
-                      />
+                      <div className="relative grid h-14 w-14 place-items-center rounded-lg bg-slate-900/80 ring-1 ring-white/10">
+                        <ClipboardList className="h-7 w-7 text-white" />
+                      </div>
                     </div>
                     <div>
-                      <CardTitle className="text-foreground group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-pink-400 transition-all duration-300">
+                      <CardTitle className="text-slate-900 dark:text-white group-hover:text-cyan-500 transition-all duration-300">
                         Consultations & Audits
                       </CardTitle>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-3 text-muted-foreground">
-                    <li className="flex items-center gap-3 group-hover:text-foreground transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-pink-400 rounded-full"></div>
+                  <ul className="space-y-3 text-slate-600 dark:text-slate-300">
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>1:1 sessions</span>
                     </li>
-                    <li className="flex items-center gap-3 group-hover:text-foreground transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-pink-400 rounded-full"></div>
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>Custom strategy plans</span>
                     </li>
-                    <li className="flex items-center gap-3 group-hover:text-foreground transition-colors">
-                      <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-pink-400 rounded-full"></div>
+                    <li className="flex items-center gap-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
                       <span>In-depth shop audits</span>
                     </li>
                   </ul>
@@ -327,70 +308,9 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mx-auto max-w-4xl">
-              <div className="grid gap-6 lg:grid-cols-2">
-                {/* Book a Call */}
-                <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-white">
-                      <Calendar className="h-5 w-5 text-cyan-500" />
-                      Book a Call
-                    </CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Schedule a free consultation to discuss your TikTok Shop strategy
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Button className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105">
-                      <Calendar className="mr-2 h-4 w-4" />
-                      Schedule via Calendly
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="w-full bg-transparent border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-400 transition-all duration-300"
-                    >
-                      <MessageCircle className="mr-2 h-4 w-4" />
-                      Schedule via WhatsApp
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                {/* Contact Details */}
-                <Card className="border-slate-700/50 bg-slate-800/50 backdrop-blur shadow-lg hover:shadow-cyan-500/10 transition-all duration-500 hover:scale-105">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-white">
-                      <Mail className="h-5 w-5 text-cyan-400" />
-                      Contact Details
-                    </CardTitle>
-                    <CardDescription className="text-gray-400">
-                      Reach out directly or connect with us on social media
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors">
-                      <Mail className="h-4 w-4 text-pink-400" />
-                      <div>
-                        <div className="font-medium text-sm text-white">Email</div>
-                        <div className="text-sm text-gray-400">awais@nextok.io</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors">
-                      <MapPin className="h-4 w-4 text-cyan-400" />
-                      <div>
-                        <div className="font-medium text-sm text-white">Location</div>
-                        <div className="text-sm text-gray-400">Remote (Serving US, UK, EU brands)</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors">
-                      <Globe className="h-4 w-4 text-pink-400" />
-                      <div>
-                        <div className="font-medium text-sm text-white">Social Links</div>
-                        <div className="text-sm text-gray-400">Connect with us on social media</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+            <div className="mx-auto max-w-2xl">
+              {/* Contact Form */}
+              <ContactForm />
             </div>
           </div>
         </section>

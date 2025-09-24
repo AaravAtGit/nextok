@@ -4,6 +4,7 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 import { ParticlesComponent } from '@/components/ui/particles'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: 'Nextok',
@@ -35,6 +36,7 @@ html {
         >
           <ParticlesComponent id="tsparticles" />
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
