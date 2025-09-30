@@ -9,9 +9,22 @@ import { type Container, type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim"; // if you are going to use `loadSlim`
 // import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`
 
-export const ParticlesComponent = (props: any) => {
+type ParticlesComponentProps = {
+  id?: string
+  className?: string
+  enableInLight?: boolean
+  density?: number
+}
+
+export const ParticlesComponent = ({
+  id = "tsparticles",
+  className = "",
+  enableInLight = false,
+  density = 55
+}: ParticlesComponentProps) => {
   const [init, setInit] = useState(false);
   const { theme } = useTheme();
+  const resolvedTheme = theme ?? "dark";
 
   // this should be run only once per application lifetime
   useEffect(() => {
@@ -28,45 +41,46 @@ export const ParticlesComponent = (props: any) => {
     });
   }, []);
 
-  const particlesLoaded = async (container?: Container): Promise<void> => {
-    console.log(container);
+  const particlesLoaded = async (_container?: Container): Promise<void> => {
+    // noop – kept for potential future hooks
   };
 
   const options: ISourceOptions = useMemo(
     () => ({
-      
       fpsLimit: 120,
       interactivity: {
         events: {
-          onClick: {
-            enable: true,
-            mode: "push",
-          },
           onHover: {
             enable: true,
-            mode: "repulse",
+            mode: ["repulse", "bubble"],
+          },
+          resize: {
+            enable: true,
           },
         },
         modes: {
-          push: {
-            quantity: 4,
-          },
           repulse: {
             distance: 200,
             duration: 0.4,
+          },
+          bubble: {
+            distance: 180,
+            size: 4,
+            duration: 2,
+            opacity: 0.2,
           },
         },
       },
       particles: {
         color: {
-          value: theme === "light" ? "#1e293b" : "#ffffff",
+          value: resolvedTheme === "light" ? "#0f172a" : "#e2e8f0",
         },
         links: {
-          color: theme === "light" ? "#1e293b" : "#ffffff",
-          distance: 150,
+          color: resolvedTheme === "light" ? "#1e293b" : "#94a3b8",
+          distance: 140,
           enable: true,
-          opacity: theme === "light" ? 0.3 : 0.5,
-          width: 1,
+          opacity: resolvedTheme === "light" ? 0.18 : 0.45,
+          width: resolvedTheme === "light" ? 0.5 : 1,
         },
         move: {
           direction: "none",
@@ -75,37 +89,40 @@ export const ParticlesComponent = (props: any) => {
             default: "out",
           },
           random: false,
-          speed: 2,
+          speed: 0.9,
           straight: false,
         },
         number: {
           density: {
             enable: true,
+            area: 800,
           },
-          value: 80,
+          value: density,
         },
         opacity: {
-          value: theme === "light" ? 0.4 : 0.5,
+          value: resolvedTheme === "light" ? 0.18 : 0.35,
         },
         shape: {
           type: "circle",
         },
         size: {
-          value: { min: 1, max: 5 },
+          value: { min: 0.8, max: 3.2 },
         },
       },
       detectRetina: true,
     }),
-    [theme],
+    [resolvedTheme, density],
   );
 
-  if (init) {
+  const shouldShow = enableInLight || resolvedTheme !== "light"
+
+  if (init && shouldShow) {
     return (
       <Particles
-        id={props.id}
+        id={id}
         particlesLoaded={particlesLoaded}
         options={options}
-        className="pointer-events-none fixed inset-0 z-0"
+        className={`pointer-events-none ${className}`}
       />
     );
   }

@@ -59,7 +59,7 @@ export default function ContactForm() {
   }
 
   return (
-    <Card className="border-slate-200/60 dark:border-slate-700/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur rounded-2xl shadow-xl">
+    <Card className="rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-700/70 dark:bg-slate-900/70">
       <CardHeader className="pb-4">
         <CardTitle className="text-slate-900 dark:text-white">Send Us a Message</CardTitle>
         <CardDescription>Tell us about your brand and goals</CardDescription>
@@ -75,7 +75,7 @@ export default function ContactForm() {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input className="rounded-xl border-slate-300/50 dark:border-slate-700/60 bg-white/70 dark:bg-slate-900/70 focus-visible:ring-2 focus-visible:ring-cyan-500" placeholder="Jane Doe" {...field} />
+                      <Input className="rounded-xl border-slate-300 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900/80" placeholder="Jane Doe" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -88,7 +88,7 @@ export default function ContactForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" className="rounded-xl border-slate-300/50 dark:border-slate-700/60 bg-white/70 dark:bg-slate-900/70 focus-visible:ring-2 focus-visible:ring-cyan-500" placeholder="you@brand.com" {...field} />
+                      <Input type="email" className="rounded-xl border-slate-300 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900/80" placeholder="you@brand.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -104,7 +104,7 @@ export default function ContactForm() {
                   <FormItem>
                     <FormLabel>Company (optional)</FormLabel>
                     <FormControl>
-                      <Input className="rounded-xl border-slate-300/50 dark:border-slate-700/60 bg-white/70 dark:bg-slate-900/70 focus-visible:ring-2 focus-visible:ring-cyan-500" placeholder="Brand Inc." {...field} />
+                      <Input className="rounded-xl border-slate-300 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900/80" placeholder="Brand Inc." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -118,7 +118,7 @@ export default function ContactForm() {
                     <FormLabel>I'm interested in</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger className="rounded-xl border-slate-300/50 dark:border-slate-700/60 bg-white/70 dark:bg-slate-900/70 focus:ring-0">
+                        <SelectTrigger className="rounded-xl border-slate-300 focus:ring-0 dark:border-slate-700 dark:bg-slate-900/80">
                           <SelectValue placeholder="Select a service" />
                         </SelectTrigger>
                       </FormControl>
@@ -142,7 +142,7 @@ export default function ContactForm() {
                 <FormItem>
                   <FormLabel>Message</FormLabel>
                   <FormControl>
-                    <Textarea rows={6} className="rounded-2xl border-slate-300/50 dark:border-slate-700/60 bg-white/70 dark:bg-slate-900/70 focus-visible:ring-2 focus-visible:ring-cyan-500" placeholder="Share context, goals, current challenges..." {...field} />
+                    <Textarea rows={6} className="rounded-2xl border-slate-300 focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-slate-700 dark:bg-slate-900/80" placeholder="Share context, goals, current challenges..." {...field} />
                   </FormControl>
                   <FormDescription className="text-slate-500 dark:text-slate-400">We typically reply within 1 business day.</FormDescription>
                   <FormMessage />

@@ -4,61 +4,163 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { ArrowRight, Calendar, Mail, MapPin, MessageCircle, Globe, Store, Users, LineChart, ClipboardList } from "lucide-react"
+import { ArrowRight, Mail, Store, Users, LineChart, ClipboardList, ShieldCheck, Sparkles, Rocket, GaugeCircle } from "lucide-react"
 import TestimonialCarousel from "@/components/testimonial-carousel"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
 import ContactForm from "@/components/contact-form"
+import { ParticlesComponent } from "@/components/ui/particles"
+
+const WHY_US_FEATURES = [
+  {
+    title: "Launch in weeks, not months",
+    description: "Our sprint-based onboarding gets your TikTok Shop optimized, stocked, and conversion-ready in under 21 days.",
+    stat: "21 day avg go-live",
+    icon: Rocket,
+  },
+  {
+    title: "Creator pipeline on autopilot",
+    description: "We activate vetted creators, seed product, and turn winning UGC into evergreen ads while you stay focused on ops.",
+    stat: "60+ creators activated",
+    icon: Sparkles,
+  },
+  {
+    title: "Decisions fueled by live data",
+    description: "Daily dashboards highlight your GMV, retention, and ad ROI so every creative tweak is grounded in numbers.",
+    stat: "43% avg GMV lift",
+    icon: GaugeCircle,
+  },
+  {
+    title: "Risk-free growth partners",
+    description: "Clear SLAs, brand-safe messaging, and fulfillment support keep your team protected while we scale the demand side.",
+    stat: "98% client retention",
+    icon: ShieldCheck,
+  },
+] as const
 
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const pageRef = useRef<HTMLDivElement>(null)
+  const heroSectionRef = useRef<HTMLElement>(null)
+  const heroGlowRef = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    if (!pageRef.current) return
+
+    gsap.registerPlugin(ScrollTrigger)
+
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>("[data-animate='section']").forEach((section) => {
+        gsap.fromTo(
+          section,
+          { autoAlpha: 0, y: 60 },
+          {
+            duration: 1,
+            autoAlpha: 1,
+            y: 0,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        )
+      })
+
+      gsap.utils.toArray<HTMLElement>("[data-animate='faq-item']").forEach((item) => {
+        gsap.fromTo(
+          item,
+          { autoAlpha: 0, y: 30 },
+          {
+            duration: 1.1,
+            autoAlpha: 1,
+            y: 0,
+            ease: "elastic.inOut(1, 0.75)",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        )
+      })
+    }, pageRef)
+
+    return () => ctx.revert()
+  }, [])
 
   useEffect(() => {
     setIsLoaded(true)
+    const heroEl = heroSectionRef.current
+    const glowEl = heroGlowRef.current
+    if (!heroEl || !glowEl) return
 
-  const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
+    let frameId: number | null = null
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const rect = heroEl.getBoundingClientRect()
+      const x = event.clientX - rect.left
+      const y = event.clientY - rect.top
+
+      if (frameId) cancelAnimationFrame(frameId)
+      frameId = window.requestAnimationFrame(() => {
+        glowEl.style.setProperty("--glow-x", `${x}px`)
+        glowEl.style.setProperty("--glow-y", `${y}px`)
+      })
     }
 
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    const resetGlow = () => {
+      glowEl.style.setProperty("--glow-x", "50%")
+      glowEl.style.setProperty("--glow-y", "50%")
+    }
+
+    heroEl.addEventListener("pointermove", handlePointerMove)
+    heroEl.addEventListener("pointerleave", resetGlow)
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId)
+      heroEl.removeEventListener("pointermove", handlePointerMove)
+      heroEl.removeEventListener("pointerleave", resetGlow)
+    }
   }, [])
 
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden">
+    <div ref={pageRef} className="flex flex-col min-h-screen overflow-x-hidden">
       {/* Background handled by particles + body vars */}
 
       {/* Header */}
       <header
-        className={`px-4 lg:px-6 h-16 flex items-center border-b border-white/10 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/70 sticky top-0 z-40 transition-all duration-1000 ${isLoaded ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
+        className={`px-4 lg:px-6 h-16 flex items-center border-b border-border/40 bg-background/95 dark:bg-background/85 sticky top-0 z-40 transition-all duration-700 shadow-sm dark:shadow-none ${isLoaded ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}
       >
         <Link className="flex items-center justify-center" href="/">
-          <span className="text-brand-gradient text-xl sm:text-2xl font-extrabold tracking-tight">NEXTOK</span>
+          <span className="text-brand-gradient text-xl sm:text-2xl font-extrabold tracking-tight drop-shadow">NEXTOK</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
           <Link
-            className="text-sm font-medium text-white hover:text-blue-200 transition-all duration-300"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-300 transition-all duration-300"
             href="#testimonials"
           >
             Testimonials
           </Link>
           <Link
-            className="text-sm font-medium text-white hover:text-blue-200 transition-all duration-300"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-300 transition-all duration-300"
             href="#contact"
           >
             Contact
           </Link>
           <Link
-            className="text-sm font-medium text-white hover:text-blue-200 transition-all duration-300"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-300 transition-all duration-300"
             href="#faq"
           >
             FAQ
           </Link>
           <Link
-            className="text-sm font-medium text-white hover:text-blue-200 transition-all duration-300"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-cyan-600 dark:hover:text-cyan-300 transition-all duration-300"
             href="#services"
           >
             Services
@@ -69,22 +171,41 @@ export default function HomePage() {
 
       <main className="flex-1 relative z-10">
         {/* Hero Section */}
-  <section className="w-full py-12 md:py-24 lg:py-32 relative overflow-hidden bg-transparent">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+        <section
+          ref={heroSectionRef}
+          data-animate="section"
+          className="relative w-full overflow-hidden bg-gradient-to-b from-white via-slate-50 to-transparent dark:from-slate-950 dark:via-slate-950/60 dark:to-transparent py-16 md:py-28 lg:py-36"
+        >
+          <div className="absolute inset-0">
+            <div
+              ref={heroGlowRef}
+              style={{ "--glow-x": "50%", "--glow-y": "45%" } as CSSProperties}
+              className="pointer-events-none absolute inset-0 opacity-60 sm:opacity-80 [background:radial-gradient(600px_circle_at_var(--glow-x)_var(--glow-y),rgba(6,182,212,0.18),rgba(236,72,153,0.08)_35%,transparent_70%)]"
+            />
+            <ParticlesComponent
+              className="absolute inset-0 z-0 scale-110 mix-blend-screen opacity-60 dark:mix-blend-normal dark:opacity-90"
+              enableInLight
+              density={50}
+            />
+            <div className="pointer-events-none absolute -top-24 right-[-14rem] hidden h-80 w-80 animate-[spin_28s_linear_infinite] rounded-full bg-gradient-to-br from-cyan-400/40 via-indigo-400/20 to-fuchsia-400/35 opacity-60 dark:opacity-25 lg:block" />
+            <div className="pointer-events-none absolute -bottom-24 left-[-10rem] hidden h-72 w-72 animate-[spin_36s_linear_infinite_reverse] rounded-full bg-gradient-to-br from-fuchsia-500/30 via-violet-500/20 to-cyan-400/30 opacity-60 dark:opacity-25 lg:block" />
+          </div>
+
+          <div className="container relative z-10 px-4 md:px-6">
+            <div className="grid gap-8 lg:grid-cols-[1fr_420px] lg:gap-12 xl:grid-cols-[1fr_560px]">
               <div
                 className={`flex flex-col justify-center space-y-4 transition-all duration-1000 delay-300 ${isLoaded ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}
               >
                 <div className="space-y-2">
                   
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-white animate-fade-in">
+                  <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl xl:text-6xl/none animate-fade-in">
                     Scale Your TikTok Shop With <span className="text-brand-gradient">NEXTOK</span>
                   </h1>
-                  <p className="text-xl text-white/90 font-medium animate-fade-in-up delay-500">
+                  <p className="text-xl font-semibold text-slate-600 dark:text-slate-200 animate-fade-in-up delay-500">
                     Experts in growing brands through TikTok Shop strategy, influencer seeding & GMV-maximizing
                     campaigns.
                   </p>
-                  <p className="max-w-[600px] text-white/80 md:text-lg animate-fade-in-up delay-700">
+                  <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-lg animate-fade-in-up delay-700">
                     We help eCommerce brands unlock their next level of sales using performance-driven TikTok Shop
                     growth systems.
                   </p>
@@ -114,19 +235,65 @@ export default function HomePage() {
                 <div className="relative">
                   <Image
                     alt="TikTok Shop Growth Dashboard"
-                    className="relative mx-auto overflow-hidden rounded-xl object-contain transition-all duration-500 hover:scale-105 rotate-12 hover:rotate-0"
+                    className="relative mx-auto overflow-hidden rounded-2xl border border-white/60 bg-white/80 object-contain shadow-2xl transition-all duration-700 hover:scale-105 hover:rotate-0 rotate-6 dark:border-white/10 dark:bg-slate-900/60"
                     height="600"
                     src="/tiktok.gif?text=TikTok+Shop+Dashboard"
                     width="400"
                   />
+                  <div className="pointer-events-none absolute -bottom-10 left-1/2 hidden h-28 w-28 -translate-x-1/2 animate-[float_6s_ease-in-out_infinite] rounded-full bg-gradient-to-r from-cyan-400/40 via-indigo-400/30 to-fuchsia-400/35 opacity-60 dark:opacity-75 sm:block" />
+                  <div className="pointer-events-none absolute -top-6 -right-10 hidden h-16 w-16 animate-[float_4s_ease-in-out_infinite_reverse] rounded-full bg-cyan-400/50 opacity-60 dark:opacity-75 sm:block" />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Why Choose Us Section */}
+        <section
+          id="why-us"
+          data-animate="section"
+          className="relative w-full overflow-hidden bg-slate-100/90 py-16 md:py-24 lg:py-28 dark:bg-slate-950/60"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-200/50 dark:from-slate-900 dark:via-slate-950/30 dark:to-slate-900" />
+          <div className="container relative z-10 px-4 md:px-6">
+            <div className="mx-auto mb-12 flex max-w-3xl flex-col items-center text-center space-y-4">
+              <Badge className="bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/10 dark:text-cyan-300">Why NEXTOK</Badge>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
+                Growth partners built for TikTok velocity
+              </h2>
+              <p className="text-lg text-slate-600 dark:text-slate-300">
+                We combine creator firepower, paid social precision, and battle-tested playbooks so your brand can blitz
+                every campaign cycle with confidence.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              {WHY_US_FEATURES.map(({ title, description, stat, icon: Icon }) => (
+                <div
+                  key={title}
+                  className="group relative flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-8 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-cyan-400/60 hover:shadow-2xl dark:border-slate-700/60 dark:bg-slate-900/70 dark:hover:border-cyan-500/70"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-200">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                      {stat}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">{title}</h3>
+                  <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{description}</p>
+                  <div className="mt-auto flex items-center gap-2 text-sm font-medium text-cyan-600 transition-colors group-hover:text-cyan-500 dark:text-cyan-300 dark:group-hover:text-cyan-200">
+                    <span>See how it works</span>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Services Section */}
-  <section id="services" className="w-full py-12 md:py-24 lg:py-32 relative bg-transparent">
+        <section id="services" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-slate-50/90 dark:bg-slate-950/50">
           <div className="container px-4 md:px-6 relative">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
@@ -278,14 +445,14 @@ export default function HomePage() {
         </section>
 
         {/* Testimonials Section (Carousel) */}
-  <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 relative bg-transparent">
+  <section id="testimonials" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-950/40 dark:via-slate-950/20 dark:to-slate-950/50">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-3">
                 <h2 className="text-brand-gradient text-3xl font-bold tracking-tight sm:text-5xl">
                   What Our Clients Say
                 </h2>
-                <p className="max-w-[800px] mx-auto text-blue-100 md:text-xl/relaxed">
+                <p className="mx-auto max-w-[800px] text-slate-600 dark:text-blue-100 md:text-xl/relaxed">
                   Real results from eCommerce brands we help scale with data-driven TikTok Shop growth systems.
                 </p>
               </div>
@@ -297,7 +464,7 @@ export default function HomePage() {
         </section>
 
         {/* Contact Section */}
-  <section id="contact" className="w-full py-12 md:py-24 lg:py-32 relative bg-transparent">
+  <section id="contact" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-slate-100/90 dark:bg-slate-950/50">
           <div className="container px-4 md:px-6 relative">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
@@ -308,7 +475,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mx-auto max-w-2xl">
+            <div className="mx-auto max-w-3xl">
               {/* Contact Form */}
               <ContactForm />
             </div>
@@ -316,14 +483,14 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="w-full py-12 md:py-24 lg:py-32 relative">
+        <section id="faq" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-white/90 dark:bg-slate-950/60">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-gradient">
                   Frequently Asked Questions
                 </h2>
-                <p className="max-w-[600px] text-gray-400 md:text-xl/relaxed">
+                <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
                   Everything you need to know about working with NEXTOK
                 </p>
               </div>
@@ -333,24 +500,26 @@ export default function HomePage() {
               <Accordion type="single" collapsible className="w-full space-y-4">
                 <AccordionItem
                   value="item-1"
-                  className="border border-slate-700/50 rounded-lg px-6 bg-slate-800/30 backdrop-blur hover:bg-slate-800/50 transition-all duration-300"
+                  data-animate="faq-item"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline text-white hover:text-cyan-400">
+                  <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
                     <span className="font-semibold">I'm new to TikTok Shop. Can you help me from scratch?</span>
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-400 pb-4">
+                  <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
                     Yes. We offer full onboarding, from setting up your Shop to building your influencer & ad pipeline.
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem
                   value="item-2"
-                  className="border border-slate-700/50 rounded-lg px-6 bg-slate-800/30 backdrop-blur hover:bg-slate-800/50 transition-all duration-300"
+                  data-animate="faq-item"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline text-white hover:text-cyan-400">
-                    <span className="font-semibold">Do you work on commission or fixed fees?</span>
+                  <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
+                      <span className="font-semibold">Do you work on commission or fixed fees?</span>
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-400 pb-4">
+                  <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
                     We offer flexible pricing—fixed retainers, performance-based, or hybrid models depending on brand
                     stage.
                   </AccordionContent>
@@ -358,24 +527,26 @@ export default function HomePage() {
 
                 <AccordionItem
                   value="item-3"
-                  className="border border-slate-700/50 rounded-lg px-6 bg-slate-800/30 backdrop-blur hover:bg-slate-800/50 transition-all duration-300"
+                  data-animate="faq-item"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline text-white hover:text-cyan-400">
+                  <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
                     <span className="font-semibold">How fast can I expect results?</span>
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-400 pb-4">
+                  <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
                     Most brands see traction within 2-4 weeks. For scaling, we recommend a 60-90 day timeline.
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem
                   value="item-4"
-                  className="border border-slate-700/50 rounded-lg px-6 bg-slate-800/30 backdrop-blur hover:bg-slate-800/50 transition-all duration-300"
+                  data-animate="faq-item"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline text-white hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-pink-400 hover:to-cyan-400">
+                  <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-pink-500 hover:via-cyan-500 hover:to-sky-500 dark:text-slate-100">
                     <span className="font-semibold">Can you handle logistics & fulfillment too?</span>
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-400 pb-4">
+                  <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
                     While we don't fulfill orders, we guide your team or connect you with trusted partners for smooth
                     ops.
                   </AccordionContent>
@@ -383,12 +554,13 @@ export default function HomePage() {
 
                 <AccordionItem
                   value="item-5"
-                  className="border border-slate-700/50 rounded-lg px-6 bg-slate-800/30 backdrop-blur hover:bg-slate-800/50 transition-all duration-300"
+                  data-animate="faq-item"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline text-white hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-pink-400 hover:to-cyan-400">
+                  <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-pink-500 hover:via-cyan-500 hover:to-sky-500 dark:text-slate-100">
                     <span className="font-semibold">What kind of brands do you work with?</span>
                   </AccordionTrigger>
-                  <AccordionContent className="text-gray-400 pb-4">
+                  <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
                     Primarily eCommerce brands in health, wellness, beauty, and gadgets—especially with a high AOV.
                   </AccordionContent>
                 </AccordionItem>
@@ -401,8 +573,8 @@ export default function HomePage() {
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-r from-pink-600 to-cyan-600 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-pink-600/90 to-cyan-600/90"></div>
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/4 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute bottom-0 right-1/4 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+            <div className="absolute top-0 left-1/4 h-32 w-32 animate-pulse rounded-full bg-white/20 opacity-50"></div>
+            <div className="absolute bottom-0 right-1/4 h-24 w-24 animate-pulse delay-1000 rounded-full bg-white/20 opacity-40"></div>
           </div>
           <div className="container px-4 md:px-6 relative">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -438,23 +610,23 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-slate-700/50 bg-slate-900/95 backdrop-blur relative z-10">
-        <p className="text-xs text-gray-400">© 2024 NEXTOK. All rights reserved.</p>
+  <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-slate-800 bg-slate-950 relative z-10">
+  <p className="text-xs text-slate-500 dark:text-slate-400">© 2024 NEXTOK. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link
-            className="text-xs hover:underline underline-offset-4 text-gray-400 hover:text-white transition-colors"
+            className="text-xs text-slate-500 underline-offset-4 transition-colors hover:text-cyan-600 hover:underline dark:text-slate-400 dark:hover:text-cyan-300"
             href="#"
           >
             Privacy Policy
           </Link>
           <Link
-            className="text-xs hover:underline underline-offset-4 text-gray-400 hover:text-white transition-colors"
+            className="text-xs text-slate-500 underline-offset-4 transition-colors hover:text-cyan-600 hover:underline dark:text-slate-400 dark:hover:text-cyan-300"
             href="#"
           >
             Terms of Service
           </Link>
           <Link
-            className="text-xs hover:underline underline-offset-4 text-gray-400 hover:text-white transition-colors"
+            className="text-xs text-slate-500 underline-offset-4 transition-colors hover:text-cyan-600 hover:underline dark:text-slate-400 dark:hover:text-cyan-300"
             href="mailto:awais@nextok.io"
           >
             Contact

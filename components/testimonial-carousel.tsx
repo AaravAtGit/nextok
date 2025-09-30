@@ -28,13 +28,13 @@ type Testimonial = {
 
 const testimonials: Testimonial[] = [
   {
-    name: "Avery Thompson",
-    role: "Head of Growth",
-    company: "Nordic Naturals",
+    name: "Technoblade",
+    role: "Orphan slayer",
+    company: "Technoblade Inc.",
     avatar: "/testimony/p1.jpg",
-    initials: "AT",
+    initials: "TB",
     quote:
-      "NEXTOK helped us go from zero to consistent five-figure GMV on TikTok Shop within eight weeks. Their workflow and communication are top-notch.",
+     "If you ever get bored, punch an orphan. What are they gonna do? Tell their parent?" 
   },
   {
     name: "Kafka",
@@ -122,7 +122,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         type="button"
         onClick={() => api?.scrollPrev()}
         aria-label="Previous testimonial"
-        className="pointer-events-auto absolute left-2 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/80 p-3 text-slate-300 shadow-lg ring-1 ring-slate-700/60 backdrop-blur-md hover:text-white hover:bg-slate-800/80 md:flex xl:left-6"
+        className="pointer-events-auto absolute left-2 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white/90 p-3 text-slate-600 shadow-lg ring-1 ring-slate-200 transition-colors hover:text-slate-900 hover:bg-white md:flex dark:bg-slate-900/90 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-white xl:left-6"
         style={{ transform: "translateY(-50%)" }}
       >
         <ArrowLeft className="h-7 w-7" />
@@ -131,7 +131,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
         type="button"
         onClick={() => api?.scrollNext()}
         aria-label="Next testimonial"
-        className="pointer-events-auto absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/80 p-3 text-slate-300 shadow-lg ring-1 ring-slate-700/60 backdrop-blur-md hover:text-white hover:bg-slate-800/80 md:flex xl:right-6"
+        className="pointer-events-auto absolute right-2 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white/90 p-3 text-slate-600 shadow-lg ring-1 ring-slate-200 transition-colors hover:text-slate-900 hover:bg-white md:flex dark:bg-slate-900/90 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-800 dark:hover:text-white xl:right-6"
         style={{ transform: "translateY(-50%)" }}
       >
         <ArrowRight className="h-7 w-7" />
@@ -139,11 +139,11 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
       <div className="mx-auto w-full max-w-5xl px-4 md:px-6">
         {!hideHeader && (
           <div className="mb-10 flex flex-col gap-2 text-center">
-            <h2 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
+            <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-3xl">
               {heading}
             </h2>
             {subheading && (
-              <p className="mx-auto max-w-prose text-sm text-slate-400 md:text-base">
+              <p className="mx-auto max-w-prose text-sm text-slate-500 dark:text-slate-400 md:text-base">
                 {subheading}
               </p>
             )}
@@ -163,27 +163,27 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
           <CarouselContent>
             {items.map((t, i) => (
               <CarouselItem key={i} className="basis-full">
-                <Card className="relative h-full overflow-hidden rounded-3xl border border-slate-700/70 bg-slate-800/90 shadow-xl transition-colors duration-300 hover:border-slate-600">
+                <Card className="relative h-full overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-xl transition-colors duration-300 hover:border-cyan-300 dark:border-slate-700/70 dark:bg-slate-900/85 dark:hover:border-cyan-500">
                   <CardContent className="relative flex h-full flex-col gap-10 p-10 md:p-14">
-                    <div className="flex flex-col items-center text-center gap-6">
-                      <Avatar className="h-28 w-28 ring-2 ring-slate-600">
+                    <div className="flex flex-col items-center gap-6 text-center">
+                      <Avatar className="h-28 w-28 ring-2 ring-cyan-200 dark:ring-cyan-500/40">
                         {t.avatar && <AvatarImage src={t.avatar} alt={t.name} />}
-                        <AvatarFallback className="bg-slate-700 text-slate-300 text-2xl">
+                        <AvatarFallback className="bg-cyan-500/15 text-cyan-700 text-2xl dark:bg-cyan-400/10 dark:text-cyan-200">
                           {t.initials}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col items-center">
-                        <span className="text-2xl font-semibold tracking-tight text-white">
+                        <span className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
                           {t.name}
                         </span>
                         {showRole && (
-                          <span className="text-sm font-medium text-slate-400">
+                          <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
                             {[t.role, t.company].filter(Boolean).join(" • ")}
                           </span>
                         )}
                       </div>
                     </div>
-                    <p className="mx-auto max-w-3xl text-center text-xl leading-relaxed text-slate-300 md:text-[1.4rem] md:leading-relaxed">
+                    <p className="mx-auto max-w-3xl text-center text-xl leading-relaxed text-slate-600 md:text-[1.4rem] md:leading-relaxed dark:text-slate-200">
                       {t.quote}
                     </p>
                   </CardContent>
@@ -198,8 +198,8 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({
               key={i}
               aria-label={`Go to slide ${i + 1}`}
               className={cn(
-                "h-1.5 w-8 rounded-full bg-slate-700/80 transition-all",
-                i === current && "w-12 bg-cyan-400/80"
+                "h-1.5 w-8 rounded-full bg-slate-300 transition-all dark:bg-slate-700/80",
+                i === current && "w-12 bg-cyan-500"
               )}
             />
           ))}
