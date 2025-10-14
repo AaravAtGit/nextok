@@ -7,11 +7,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ArrowRight, Mail, Store, Users, LineChart, ClipboardList, ShieldCheck, Sparkles, Rocket, GaugeCircle } from "lucide-react"
 import TestimonialCarousel from "@/components/testimonial-carousel"
 import { ThemeToggle } from "@/components/theme-toggle"
-import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useEffect, useState } from "react"
 import ContactForm from "@/components/contact-form"
 import { ParticlesComponent } from "@/components/ui/particles"
 
@@ -44,93 +41,106 @@ const WHY_US_FEATURES = [
 
 export default function HomePage() {
   const [isLoaded, setIsLoaded] = useState(false)
-  const pageRef = useRef<HTMLDivElement>(null)
-  const heroSectionRef = useRef<HTMLElement>(null)
-  const heroGlowRef = useRef<HTMLDivElement>(null)
-
-  useLayoutEffect(() => {
-    if (!pageRef.current) return
-
-    gsap.registerPlugin(ScrollTrigger)
-
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>("[data-animate='section']").forEach((section) => {
-        gsap.fromTo(
-          section,
-          { autoAlpha: 0, y: 60 },
-          {
-            duration: 1,
-            autoAlpha: 1,
-            y: 0,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        )
-      })
-
-      gsap.utils.toArray<HTMLElement>("[data-animate='faq-item']").forEach((item) => {
-        gsap.fromTo(
-          item,
-          { autoAlpha: 0, y: 30 },
-          {
-            duration: 1.1,
-            autoAlpha: 1,
-            y: 0,
-            ease: "elastic.inOut(1, 0.75)",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 85%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        )
-      })
-    }, pageRef)
-
-    return () => ctx.revert()
-  }, [])
+  const currentYear = new Date().getFullYear()
 
   useEffect(() => {
     setIsLoaded(true)
-    const heroEl = heroSectionRef.current
-    const glowEl = heroGlowRef.current
-    if (!heroEl || !glowEl) return
+  }, [])
 
-    let frameId: number | null = null
+  useEffect(() => {
+    // IntersectionObserver-based scroll animations for marked sections/elements
+    const animatedElements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-animate]")
+    )
 
-    const handlePointerMove = (event: PointerEvent) => {
-      const rect = heroEl.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
+    if (animatedElements.length === 0) {
+      return
+    }
 
-      if (frameId) cancelAnimationFrame(frameId)
-      frameId = window.requestAnimationFrame(() => {
-        glowEl.style.setProperty("--glow-x", `${x}px`)
-        glowEl.style.setProperty("--glow-y", `${y}px`)
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const counters = new Map<string, number>()
+
+    const getNextIndex = (key: string) => {
+      const current = counters.get(key) ?? 0
+      counters.set(key, current + 1)
+      return current
+    }
+
+    const delaySteps: Record<string, number> = {
+      section: 140,
+      card: 90,
+      "faq-item": 70,
+    }
+
+    animatedElements.forEach((element) => {
+      const type = element.dataset.animate ?? "section"
+      const index = getNextIndex(type)
+      const step = delaySteps[type] ?? delaySteps.section
+
+      element.classList.add("scroll-animate-init")
+      element.style.setProperty("--scroll-delay", `${Math.min(index, 8) * step}ms`)
+    })
+
+    if (prefersReducedMotion.matches) {
+      animatedElements.forEach((element) => {
+        element.classList.add("scroll-animate-visible")
+      })
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const target = entry.target as HTMLElement
+          if (entry.isIntersecting) {
+            window.requestAnimationFrame(() => {
+              target.classList.add("scroll-animate-visible")
+            })
+            return
+          }
+
+          if (entry.boundingClientRect.top > 0) {
+            target.classList.remove("scroll-animate-visible")
+          }
+        })
+      },
+      {
+        rootMargin: "0px 0px -15% 0px",
+        threshold: 0.15,
+      }
+    )
+
+    animatedElements.forEach((element) => observer.observe(element))
+
+    const handleReducedMotionChange = (event: MediaQueryListEvent) => {
+      if (!event.matches) {
+        return
+      }
+
+      observer.disconnect()
+      animatedElements.forEach((element) => {
+        element.classList.add("scroll-animate-visible")
       })
     }
 
-    const resetGlow = () => {
-      glowEl.style.setProperty("--glow-x", "50%")
-      glowEl.style.setProperty("--glow-y", "50%")
+    if (typeof prefersReducedMotion.addEventListener === "function") {
+      prefersReducedMotion.addEventListener("change", handleReducedMotionChange)
+    } else {
+      prefersReducedMotion.addListener(handleReducedMotionChange)
     }
 
-    heroEl.addEventListener("pointermove", handlePointerMove)
-    heroEl.addEventListener("pointerleave", resetGlow)
-
     return () => {
-      if (frameId) cancelAnimationFrame(frameId)
-      heroEl.removeEventListener("pointermove", handlePointerMove)
-      heroEl.removeEventListener("pointerleave", resetGlow)
+      observer.disconnect()
+      if (typeof prefersReducedMotion.removeEventListener === "function") {
+        prefersReducedMotion.removeEventListener("change", handleReducedMotionChange)
+      } else {
+        prefersReducedMotion.removeListener(handleReducedMotionChange)
+      }
     }
   }, [])
 
   return (
-    <div ref={pageRef} className="flex flex-col min-h-screen overflow-x-hidden">
+  <div className="flex flex-col min-h-screen overflow-x-hidden">
       {/* Background handled by particles + body vars */}
 
       {/* Header */}
@@ -172,50 +182,39 @@ export default function HomePage() {
       <main className="flex-1 relative z-10">
         {/* Hero Section */}
         <section
-          ref={heroSectionRef}
           data-animate="section"
           className="relative w-full overflow-hidden bg-gradient-to-b from-white via-slate-50 to-transparent dark:from-slate-950 dark:via-slate-950/60 dark:to-transparent py-16 md:py-28 lg:py-36"
         >
           <div className="absolute inset-0">
-            <div
-              ref={heroGlowRef}
-              style={{ "--glow-x": "50%", "--glow-y": "45%" } as CSSProperties}
-              className="pointer-events-none absolute inset-0 opacity-60 sm:opacity-80 [background:radial-gradient(600px_circle_at_var(--glow-x)_var(--glow-y),rgba(6,182,212,0.18),rgba(236,72,153,0.08)_35%,transparent_70%)]"
-            />
             <ParticlesComponent
-              className="absolute inset-0 z-0 scale-110 mix-blend-screen opacity-60 dark:mix-blend-normal dark:opacity-90"
+              className="absolute inset-0 z-0 opacity-60 dark:opacity-90"
               enableInLight
               density={50}
             />
-            <div className="pointer-events-none absolute -top-24 right-[-14rem] hidden h-80 w-80 animate-[spin_28s_linear_infinite] rounded-full bg-gradient-to-br from-cyan-400/40 via-indigo-400/20 to-fuchsia-400/35 opacity-60 dark:opacity-25 lg:block" />
-            <div className="pointer-events-none absolute -bottom-24 left-[-10rem] hidden h-72 w-72 animate-[spin_36s_linear_infinite_reverse] rounded-full bg-gradient-to-br from-fuchsia-500/30 via-violet-500/20 to-cyan-400/30 opacity-60 dark:opacity-25 lg:block" />
           </div>
 
           <div className="container relative z-10 px-4 md:px-6">
-            <div className="grid gap-8 lg:grid-cols-[1fr_420px] lg:gap-12 xl:grid-cols-[1fr_560px]">
+            <div className="mx-auto grid max-w-4xl gap-8 text-center">
               <div
-                className={`flex flex-col justify-center space-y-4 transition-all duration-1000 delay-300 ${isLoaded ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}
+                className={`flex flex-col items-center justify-center space-y-5 ${isLoaded ? "hero-text-animate" : "hero-text-initial"}`}
               >
                 <div className="space-y-2">
-                  
-                  <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl xl:text-6xl/none animate-fade-in">
+                  <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl xl:text-6xl/none">
                     Scale Your TikTok Shop With <span className="text-brand-gradient">NEXTOK</span>
                   </h1>
-                  <p className="text-xl font-semibold text-slate-600 dark:text-slate-200 animate-fade-in-up delay-500">
+                  <p className="text-xl font-semibold text-slate-600 dark:text-slate-200">
                     Experts in growing brands through TikTok Shop strategy, influencer seeding & GMV-maximizing
                     campaigns.
                   </p>
-                  <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-lg animate-fade-in-up delay-700">
+                  <p className="mx-auto max-w-[640px] text-slate-600 dark:text-slate-300 md:text-lg">
                     We help eCommerce brands unlock their next level of sales using performance-driven TikTok Shop
                     growth systems.
                   </p>
                 </div>
-                <div
-                  className={`flex flex-col gap-2 min-[400px]:flex-row transition-all duration-1000 delay-1000 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"}`}
-                >
+                <div className="flex flex-col gap-3 min-[400px]:flex-row">
                   <Button
                     size="lg"
-                    className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105 group"
+                    className={`${isLoaded ? "hero-button-animate hero-button-delay-1" : "hero-button-initial"} bg-cyan-500 hover:bg-cyan-600 text-white font-semibold shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105 group`}
                   >
                     Book a Free Consultation
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -223,25 +222,10 @@ export default function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 bg-transparent hover:border-cyan-400 transition-all duration-300 hover:scale-105"
+                    className={`${isLoaded ? "hero-button-animate hero-button-delay-2" : "hero-button-initial"} border-cyan-500/50 text-cyan-500 hover:bg-cyan-500/10 bg-white/70 hover:border-cyan-400 transition-all duration-300 hover:scale-105 dark:bg-slate-900/60`}
                   >
                     See Our Work
                   </Button>
-                </div>
-              </div>
-              <div
-                className={`flex items-center justify-center transition-all duration-1000 delay-500 ${isLoaded ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
-              >
-                <div className="relative">
-                  <Image
-                    alt="TikTok Shop Growth Dashboard"
-                    className="relative mx-auto overflow-hidden rounded-2xl border border-white/60 bg-white/80 object-contain shadow-2xl transition-all duration-700 hover:scale-105 hover:rotate-0 rotate-6 dark:border-white/10 dark:bg-slate-900/60"
-                    height="600"
-                    src="/tiktok.gif?text=TikTok+Shop+Dashboard"
-                    width="400"
-                  />
-                  <div className="pointer-events-none absolute -bottom-10 left-1/2 hidden h-28 w-28 -translate-x-1/2 animate-[float_6s_ease-in-out_infinite] rounded-full bg-gradient-to-r from-cyan-400/40 via-indigo-400/30 to-fuchsia-400/35 opacity-60 dark:opacity-75 sm:block" />
-                  <div className="pointer-events-none absolute -top-6 -right-10 hidden h-16 w-16 animate-[float_4s_ease-in-out_infinite_reverse] rounded-full bg-cyan-400/50 opacity-60 dark:opacity-75 sm:block" />
                 </div>
               </div>
             </div>
@@ -270,6 +254,7 @@ export default function HomePage() {
               {WHY_US_FEATURES.map(({ title, description, stat, icon: Icon }) => (
                 <div
                   key={title}
+                  data-animate="card"
                   className="group relative flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-8 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-cyan-400/60 hover:shadow-2xl dark:border-slate-700/60 dark:bg-slate-900/70 dark:hover:border-cyan-500/70"
                 >
                   <div className="flex items-center justify-between">
@@ -297,7 +282,7 @@ export default function HomePage() {
           <div className="container px-4 md:px-6 relative">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-gradient">Our Services</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">Our Services</h2>
                 <p className="max-w-[900px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
                   Comprehensive TikTok Shop solutions to scale your brand
                 </p>
@@ -306,7 +291,10 @@ export default function HomePage() {
 
             <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
               {/* TikTok Shop Setup & Management */}
-              <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group">
+              <Card
+                data-animate="card"
+                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group"
+              >
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
@@ -340,7 +328,10 @@ export default function HomePage() {
               </Card>
 
               {/* Influencer Seeding & UGC */}
-              <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group">
+              <Card
+                data-animate="card"
+                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group"
+              >
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
@@ -374,7 +365,10 @@ export default function HomePage() {
               </Card>
 
               {/* Paid Ads & GMV Scaling */}
-              <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group">
+              <Card
+                data-animate="card"
+                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group"
+              >
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
@@ -408,7 +402,10 @@ export default function HomePage() {
               </Card>
 
               {/* Consultations & Audits */}
-              <Card className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group">
+              <Card
+                data-animate="card"
+                className="border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 hover:border-cyan-300 dark:hover:border-cyan-500 group"
+              >
                 <CardHeader className="pb-4">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="relative">
@@ -449,7 +446,7 @@ export default function HomePage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-3">
-                <h2 className="text-brand-gradient text-3xl font-bold tracking-tight sm:text-5xl">
+                <h2 className="text-3xl font-bold tracking-tight sm:text-5xl text-slate-900 dark:text-slate-100">
                   What Our Clients Say
                 </h2>
                 <p className="mx-auto max-w-[800px] text-slate-600 dark:text-blue-100 md:text-xl/relaxed">
@@ -468,7 +465,7 @@ export default function HomePage() {
           <div className="container px-4 md:px-6 relative">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-gradient">Get In Touch</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">Get In Touch</h2>
                 <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
                   Ready to scale your TikTok Shop? Let's discuss your growth strategy.
                 </p>
@@ -487,7 +484,7 @@ export default function HomePage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-brand-gradient">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">
                   Frequently Asked Questions
                 </h2>
                 <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
@@ -611,7 +608,7 @@ export default function HomePage() {
 
       {/* Footer */}
   <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-slate-800 bg-slate-950 relative z-10">
-  <p className="text-xs text-slate-500 dark:text-slate-400">© 2024 NEXTOK. All rights reserved.</p>
+  <p className="text-xs text-slate-600 transition-colors dark:text-slate-400">© {currentYear} NEXTOK. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link
             className="text-xs text-slate-500 underline-offset-4 transition-colors hover:text-cyan-600 hover:underline dark:text-slate-400 dark:hover:text-cyan-300"
