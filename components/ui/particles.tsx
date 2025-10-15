@@ -73,14 +73,14 @@ export const ParticlesComponent = ({
       },
       particles: {
         color: {
-          value: resolvedTheme === "light" ? "#0f172a" : "#e2e8f0",
+          value: resolvedTheme === "light" ? "#06b6d4" : "#e2e8f0",
         },
         links: {
-          color: resolvedTheme === "light" ? "#1e293b" : "#94a3b8",
+          color: resolvedTheme === "light" ? "#0891b2" : "#94a3b8",
           distance: 140,
           enable: true,
-          opacity: resolvedTheme === "light" ? 0.18 : 0.45,
-          width: resolvedTheme === "light" ? 0.5 : 1,
+          opacity: 0.45,
+          width: 1,
         },
         move: {
           direction: "none",
@@ -100,13 +100,13 @@ export const ParticlesComponent = ({
           value: density,
         },
         opacity: {
-          value: resolvedTheme === "light" ? 0.18 : 0.35,
+          value: 0.35,
         },
         shape: {
           type: "circle",
         },
         size: {
-          value: { min: 0.8, max: 3.2 },
+          value: { min: 1, max: 4 },
         },
       },
       detectRetina: true,

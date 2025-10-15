@@ -8,7 +8,9 @@ import { ArrowRight, Mail, Store, Users, LineChart, ClipboardList, ShieldCheck, 
 import TestimonialCarousel from "@/components/testimonial-carousel"
 import { ThemeToggle } from "@/components/theme-toggle"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ContactForm from "@/components/contact-form"
 import { ParticlesComponent } from "@/components/ui/particles"
 
@@ -48,16 +50,47 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
-    // IntersectionObserver-based scroll animations for marked sections/elements
-    const animatedElements = Array.from(
+    // GSAP and IntersectionObserver animations
+    gsap.registerPlugin(ScrollTrigger)
+
+    let allAnimatedElements = Array.from(
       document.querySelectorAll<HTMLElement>("[data-animate]")
     )
+    const faqHeader = allAnimatedElements.find(el => el.dataset.animate === 'faq-header');
+    const faqItems = allAnimatedElements.filter(
+      (el) => el.dataset.animate === "faq-item"
+    )
+    const cssAnimatedElements = allAnimatedElements.filter(
+      (el) => el.dataset.animate !== "faq-item" && el.dataset.animate !== "faq-header"
+    )
 
-    if (animatedElements.length === 0) {
+    // GSAP animations for FAQ
+    if (faqHeader && faqItems.length > 0) {
+      const allFaqElements = [faqHeader, ...faqItems];
+      gsap.set(allFaqElements, { opacity: 0, y: 50 });
+      ScrollTrigger.create({
+        trigger: faqHeader.parentNode, // Animate all when the container is in view
+        start: "top 90%",
+        once: true,
+        onEnter: () => {
+          gsap.to(allFaqElements, {
+            opacity: 1,
+            y: 0,
+            duration: 2,
+            ease: "elastic.out(1, 0.4)",
+          });
+        },
+      });
+    }
+
+    // CSS animations for other elements
+    if (cssAnimatedElements.length === 0) {
       return
     }
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    )
     const counters = new Map<string, number>()
 
     const getNextIndex = (key: string) => {
@@ -67,12 +100,12 @@ export default function HomePage() {
     }
 
     const delaySteps: Record<string, number> = {
-      section: 140,
-      card: 90,
-      "faq-item": 70,
+      section: 80,
+      card: 50,
+      // "faq-item" is handled by GSAP
     }
 
-    animatedElements.forEach((element) => {
+    cssAnimatedElements.forEach((element) => {
       const type = element.dataset.animate ?? "section"
       const index = getNextIndex(type)
       const step = delaySteps[type] ?? delaySteps.section
@@ -82,9 +115,14 @@ export default function HomePage() {
     })
 
     if (prefersReducedMotion.matches) {
-      animatedElements.forEach((element) => {
+      cssAnimatedElements.forEach((element) => {
         element.classList.add("scroll-animate-visible")
       })
+      // Also apply final state for GSAP animations
+      if (faqHeader && faqItems.length > 0) {
+        const allFaqElements = [faqHeader, ...faqItems];
+        gsap.set(allFaqElements, { y: 0, opacity: 1 });
+      }
       return
     }
 
@@ -110,7 +148,7 @@ export default function HomePage() {
       }
     )
 
-    animatedElements.forEach((element) => observer.observe(element))
+    cssAnimatedElements.forEach((element) => observer.observe(element))
 
     const handleReducedMotionChange = (event: MediaQueryListEvent) => {
       if (!event.matches) {
@@ -118,7 +156,7 @@ export default function HomePage() {
       }
 
       observer.disconnect()
-      animatedElements.forEach((element) => {
+      cssAnimatedElements.forEach((element) => {
         element.classList.add("scroll-animate-visible")
       })
     }
@@ -131,8 +169,12 @@ export default function HomePage() {
 
     return () => {
       observer.disconnect()
+      ScrollTrigger.getAll().forEach(t => t.kill())
       if (typeof prefersReducedMotion.removeEventListener === "function") {
-        prefersReducedMotion.removeEventListener("change", handleReducedMotionChange)
+        prefersReducedMotion.removeEventListener(
+          "change",
+          handleReducedMotionChange
+        )
       } else {
         prefersReducedMotion.removeListener(handleReducedMotionChange)
       }
@@ -182,7 +224,6 @@ export default function HomePage() {
       <main className="flex-1 relative z-10">
         {/* Hero Section */}
         <section
-          data-animate="section"
           className="relative w-full overflow-hidden bg-gradient-to-b from-white via-slate-50 to-transparent dark:from-slate-950 dark:via-slate-950/60 dark:to-transparent py-16 md:py-28 lg:py-36"
         >
           <div className="absolute inset-0">
@@ -235,12 +276,11 @@ export default function HomePage() {
         {/* Why Choose Us Section */}
         <section
           id="why-us"
-          data-animate="section"
           className="relative w-full overflow-hidden bg-slate-100/90 py-16 md:py-24 lg:py-28 dark:bg-slate-950/60"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-200/50 dark:from-slate-900 dark:via-slate-950/30 dark:to-slate-900" />
           <div className="container relative z-10 px-4 md:px-6">
-            <div className="mx-auto mb-12 flex max-w-3xl flex-col items-center text-center space-y-4">
+            <div data-animate="section" className="mx-auto mb-12 flex max-w-3xl flex-col items-center text-center space-y-4">
               <Badge className="bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/10 dark:text-cyan-300">Why NEXTOK</Badge>
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
                 Growth partners built for TikTok velocity
@@ -269,7 +309,7 @@ export default function HomePage() {
                   <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{description}</p>
                   <div className="mt-auto flex items-center gap-2 text-sm font-medium text-cyan-600 transition-colors group-hover:text-cyan-500 dark:text-cyan-300 dark:group-hover:text-cyan-200">
                     <span>See how it works</span>
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </div>
                 </div>
               ))}
@@ -278,9 +318,9 @@ export default function HomePage() {
         </section>
 
         {/* Services Section */}
-        <section id="services" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-slate-50/90 dark:bg-slate-950/50">
+        <section id="services" className="relative w-full py-12 md:py-24 lg:py-32 bg-slate-50/90 dark:bg-slate-950/50">
           <div className="container px-4 md:px-6 relative">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div data-animate="section" className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">Our Services</h2>
                 <p className="max-w-[900px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
@@ -442,9 +482,9 @@ export default function HomePage() {
         </section>
 
         {/* Testimonials Section (Carousel) */}
-  <section id="testimonials" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-950/40 dark:via-slate-950/20 dark:to-slate-950/50">
+  <section id="testimonials" className="relative w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-950/40 dark:via-slate-950/20 dark:to-slate-950/50">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div data-animate="section" className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-3">
                 <h2 className="text-3xl font-bold tracking-tight sm:text-5xl text-slate-900 dark:text-slate-100">
                   What Our Clients Say
@@ -454,16 +494,16 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto">
+            <div data-animate="section" className="mx-auto">
               <TestimonialCarousel hideHeader />
             </div>
           </div>
         </section>
 
         {/* Contact Section */}
-  <section id="contact" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-slate-100/90 dark:bg-slate-950/50">
+  <section id="contact" className="relative w-full py-12 md:py-24 lg:py-32 bg-slate-100/90 dark:bg-slate-950/50">
           <div className="container px-4 md:px-6 relative">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div data-animate="section" className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">Get In Touch</h2>
                 <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
@@ -472,7 +512,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mx-auto max-w-3xl">
+            <div data-animate="section" className="mx-auto max-w-3xl">
               {/* Contact Form */}
               <ContactForm />
             </div>
@@ -480,9 +520,9 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" data-animate="section" className="relative w-full py-12 md:py-24 lg:py-32 bg-white/90 dark:bg-slate-950/60">
+        <section id="faq" className="relative w-full py-12 md:py-24 lg:py-32 bg-white/90 dark:bg-slate-950/60">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div data-animate="faq-header" className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">
                   Frequently Asked Questions
@@ -498,7 +538,7 @@ export default function HomePage() {
                 <AccordionItem
                   value="item-1"
                   data-animate="faq-item"
-                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
                   <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
                     <span className="font-semibold">I'm new to TikTok Shop. Can you help me from scratch?</span>
@@ -511,7 +551,7 @@ export default function HomePage() {
                 <AccordionItem
                   value="item-2"
                   data-animate="faq-item"
-                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
                   <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
                       <span className="font-semibold">Do you work on commission or fixed fees?</span>
@@ -525,7 +565,7 @@ export default function HomePage() {
                 <AccordionItem
                   value="item-3"
                   data-animate="faq-item"
-                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
                   <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
                     <span className="font-semibold">How fast can I expect results?</span>
@@ -538,7 +578,7 @@ export default function HomePage() {
                 <AccordionItem
                   value="item-4"
                   data-animate="faq-item"
-                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
                   <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-pink-500 hover:via-cyan-500 hover:to-sky-500 dark:text-slate-100">
                     <span className="font-semibold">Can you handle logistics & fulfillment too?</span>
@@ -552,7 +592,7 @@ export default function HomePage() {
                 <AccordionItem
                   value="item-5"
                   data-animate="faq-item"
-                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
+                  className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                 >
                   <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-pink-500 hover:via-cyan-500 hover:to-sky-500 dark:text-slate-100">
                     <span className="font-semibold">What kind of brands do you work with?</span>
@@ -589,7 +629,7 @@ export default function HomePage() {
                   variant="secondary"
                   className="bg-white text-slate-900 hover:bg-gray-100 font-semibold shadow-lg hover:shadow-white/25 transition-all duration-300 hover:scale-105 group"
                 >
-                  Book Free Consultation
+                  Book a Free Consultation
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
                 <Button
