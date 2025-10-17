@@ -60,9 +60,9 @@ export default function ContactForm() {
 
   return (
     <Card className="rounded-2xl border border-slate-200/70 bg-white shadow-xl dark:border-slate-700/70 dark:bg-slate-900/70">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-slate-900 dark:text-white">Send Us a Message</CardTitle>
-        <CardDescription>Tell us about your brand and goals</CardDescription>
+      <CardHeader className="pb-4 text-center">
+        <CardTitle className="text-slate-900 dark:text-white text-center">Send Us a Message</CardTitle>
+        <CardDescription className="text-center">Tell us about your brand and goals</CardDescription>
       </CardHeader>
       <CardContent className="pt-0">
         <Form {...form}>
@@ -150,7 +150,7 @@ export default function ContactForm() {
               )}
             />
 
-            <Button type="submit" className="mt-2 h-11 rounded-xl bg-cyan-500 hover:bg-cyan-600 shadow-md hover:shadow-cyan-500/20 transition-shadow" disabled={submitting}>
+            <Button type="submit" className="mt-2 h-11 rounded-xl bg-cyan-500 hover:bg-cyan-600 shadow-md hover:shadow-cyan-500/20 transition-shadow w-full" disabled={submitting}>
               {submitting ? "Sending..." : "Send Message"}
             </Button>
           </form>

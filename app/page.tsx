@@ -277,28 +277,23 @@ const PageContent = () => {
                 />
               </div>
 
-              <div className="container relative z-10 px-4 md:px-6">
+              <div className="container relative z-10 px-4 md:px-6 mx-auto">
                 <div className="mx-auto grid max-w-4xl gap-8 text-center">
                   <div
                     className={`flex flex-col items-center justify-center space-y-5 ${isLoaded ? "hero-text-animate" : "hero-text-initial"}`}
                   >
-                    <div className="space-y-2">
-                      <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl xl:text-6xl/none">
-                        Scale Your TikTok Shop With <span className="text-brand-gradient">NEXTOK</span>
+                    <div className="space-y-3 text-center">
+                      <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl xl:text-7xl/none text-center px-4">
+                        Turn TikTok Views Into <span className="text-brand-gradient">Revenue</span>
                       </h1>
-                      <p className="text-xl font-semibold text-slate-600 dark:text-slate-200">
-                        Experts in growing brands through TikTok Shop strategy, influencer seeding & GMV-maximizing
-                        campaigns.
-                      </p>
-                      <p className="mx-auto max-w-[640px] text-slate-600 dark:text-slate-300 md:text-lg">
-                        We help eCommerce brands unlock their next level of sales using performance-driven TikTok Shop
-                        growth systems.
+                      <p className="text-xl font-bold text-slate-700 dark:text-slate-100 text-center sm:text-2xl px-4">
+                        Your TikTok Shop growth partner that actually delivers results.
                       </p>
                     </div>
-                    <div className="flex flex-col gap-3 min-[400px]:flex-row">
+                    <div className="flex flex-col gap-3 min-[400px]:flex-row justify-center w-full md:w-auto">
                       <Button
                         size="lg"
-                        className={`${isLoaded ? "hero-button-animate hero-button-delay-1" : "hero-button-initial"} bg-cyan-500 hover:bg-cyan-600 text-white font-semibold shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105 group`}
+                        className={`${isLoaded ? "hero-button-animate hero-button-delay-1" : "hero-button-initial"} bg-cyan-500 hover:bg-cyan-600 text-white font-semibold shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105 group w-full md:w-auto`}
                       >
                         Book a Free Consultation
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -306,7 +301,7 @@ const PageContent = () => {
                       <Button
                         variant="outline"
                         size="lg"
-                        className={`${isLoaded ? "hero-button-animate hero-button-delay-2" : "hero-button-initial"} border-cyan-500/50 text-cyan-500 hover:bg-cyan-500/10 bg-white/70 hover:border-cyan-400 transition-all duration-300 hover:scale-105 dark:bg-slate-900/60`}
+                        className={`${isLoaded ? "hero-button-animate hero-button-delay-2" : "hero-button-initial"} border-cyan-500/50 text-cyan-500 hover:bg-cyan-500/10 bg-white/70 hover:border-cyan-400 transition-all duration-300 hover:scale-105 dark:bg-slate-900/60 w-full md:w-auto`}
                       >
                         See Our Work
                       </Button>
@@ -322,37 +317,37 @@ const PageContent = () => {
               className="relative w-full overflow-hidden bg-slate-100/90 py-16 md:py-24 lg:py-28 dark:bg-slate-950/60"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white via-transparent to-slate-200/50 dark:from-slate-900 dark:via-slate-950/30 dark:to-slate-900" />
-              <div className="container relative z-10 px-4 md:px-6">
+              <div className="container relative z-10 px-4 md:px-6 mx-auto">
                 <div data-animate="section" className="mx-auto mb-12 flex max-w-3xl flex-col items-center text-center space-y-4">
                   <Badge className="bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/10 dark:text-cyan-300">Why NEXTOK</Badge>
-                  <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
+                  <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl dark:text-white text-center px-4">
                     Growth partners built for TikTok velocity
                   </h2>
-                  <p className="text-lg text-slate-600 dark:text-slate-300">
+                  <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 text-center px-4">
                     We combine creator firepower, paid social precision, and battle-tested playbooks so your brand can blitz
                     every campaign cycle with confidence.
                   </p>
                 </div>
-                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 px-2 sm:px-0 max-w-7xl mx-auto">
                   {WHY_US_FEATURES.map(({ title, description, stat, icon: Icon }) => (
                     <div
                       key={title}
                       data-animate="card"
-                      className="group relative flex h-full flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-8 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-cyan-400/60 hover:shadow-2xl dark:border-slate-700/60 dark:bg-slate-900/70 dark:hover:border-cyan-500/70"
+                      className="group relative flex h-full flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:border-cyan-400/60 hover:shadow-2xl dark:border-slate-700/60 dark:bg-slate-900/70 dark:hover:border-cyan-500/70"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-200">
-                          <Icon className="h-6 w-6" />
+                      <div className="flex flex-col items-center justify-center w-full gap-2">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-200">
+                          <Icon className="h-5 w-5" />
                         </div>
-                        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                        <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:bg-slate-800 dark:text-slate-300">
                           {stat}
                         </span>
                       </div>
-                      <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">{title}</h3>
-                      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{description}</p>
-                      <div className="mt-auto flex items-center gap-2 text-sm font-medium text-cyan-600 transition-colors group-hover:text-cyan-500 dark:text-cyan-300 dark:group-hover:text-cyan-200">
+                      <h3 className="text-lg font-semibold text-slate-900 dark:text-white w-full text-center leading-snug">{title}</h3>
+                      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300 w-full text-center">{description}</p>
+                      <div className="mt-auto pt-2 flex items-center gap-2 text-xs font-medium text-cyan-600 transition-colors group-hover:text-cyan-500 dark:text-cyan-300 dark:group-hover:text-cyan-200 w-full justify-center">
                         <span>See how it works</span>
-                        <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                       </div>
                     </div>
                   ))}
@@ -364,18 +359,18 @@ const PageContent = () => {
 
             {/* Testimonials Section (Carousel) */}
       <section id="testimonials" className="relative w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-white via-slate-50 to-white dark:from-slate-950/40 dark:via-slate-950/20 dark:to-slate-950/50">
-              <div className="container px-4 md:px-6">
+              <div className="container px-4 md:px-6 mx-auto">
                 <div data-animate="section" className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-                  <div className="space-y-3">
-                    <h2 className="text-3xl font-bold tracking-tight sm:text-5xl text-slate-900 dark:text-slate-100">
+                  <div className="space-y-3 text-center">
+                    <h2 className="text-2xl font-bold tracking-tight sm:text-4xl md:text-5xl text-slate-900 dark:text-slate-100 text-center px-4">
                       What Our Clients Say
                     </h2>
-                    <p className="mx-auto max-w-[800px] text-slate-600 dark:text-blue-100 md:text-xl/relaxed">
+                    <p className="mx-auto max-w-[800px] text-slate-600 dark:text-blue-100 text-base md:text-xl/relaxed text-center px-4">
                       Real results from eCommerce brands we help scale with data-driven TikTok Shop growth systems.
                     </p>
                   </div>
                 </div>
-                <div data-animate="section" className="mx-auto">
+                <div data-animate="section" className="mx-auto max-w-5xl">
                   <TestimonialCarousel hideHeader />
                 </div>
               </div>
@@ -383,11 +378,11 @@ const PageContent = () => {
 
             {/* Contact Section */}
       <section id="contact" className="relative w-full py-12 md:py-24 lg:py-32 bg-slate-100/90 dark:bg-slate-950/50">
-              <div className="container px-4 md:px-6 relative">
+              <div className="container px-4 md:px-6 relative mx-auto">
                 <div data-animate="section" className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-                  <div className="space-y-2">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">Get In Touch</h2>
-                    <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
+                  <div className="space-y-2 text-center">
+                    <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-slate-900 dark:text-slate-100 text-center px-4">Get In Touch</h2>
+                    <p className="max-w-[600px] text-slate-600 dark:text-slate-300 text-base md:text-xl/relaxed text-center mx-auto px-4">
                       Ready to scale your TikTok Shop? Let's discuss your growth strategy.
                     </p>
                   </div>
@@ -402,29 +397,29 @@ const PageContent = () => {
 
             {/* FAQ Section */}
             <section id="faq" className="relative w-full py-12 md:py-24 lg:py-32 bg-white/90 dark:bg-slate-950/60">
-              <div className="container px-4 md:px-6">
+              <div className="container px-4 md:px-6 mx-auto">
                 <div data-animate="faq-header" className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-                  <div className="space-y-2">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-slate-900 dark:text-slate-100">
+                  <div className="space-y-2 text-center">
+                    <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-slate-900 dark:text-slate-100 text-center px-4">
                       Frequently Asked Questions
                     </h2>
-                    <p className="max-w-[600px] text-slate-600 dark:text-slate-300 md:text-xl/relaxed">
+                    <p className="max-w-[600px] text-slate-600 dark:text-slate-300 text-base md:text-xl/relaxed text-center mx-auto px-4">
                       Everything you need to know about working with NEXTOK
                     </p>
                   </div>
                 </div>
 
-                <div className="mx-auto max-w-3xl">
+                <div className="mx-auto max-w-3xl px-2 sm:px-0">
                   <Accordion type="single" collapsible className="w-full space-y-4">
                     <AccordionItem
                       value="item-1"
                       data-animate="faq-item"
                       className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                     >
-                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
-                        <span className="font-semibold">What does the onboarding process look like for a new brand?</span>
+                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300 text-base sm:text-lg">
+                        <span className="font-semibold text-left">What does the onboarding process look like for a new brand?</span>
                       </AccordionTrigger>
-                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
+                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300 text-left">
                         Our onboarding is a streamlined 3-week sprint designed for rapid launch. <strong>Week 1: Strategy & Setup:</strong> We conduct a deep dive into your brand, goals, and catalog, then build your TikTok Shop from the ground up, optimizing listings and integrating your systems. <strong>Week 2: Creator Activation:</strong> We identify and onboard 5-10 initial creators from our vetted network, seed products, and develop creative briefs for authentic UGC. <strong>Week 3: Launch & First Ads:</strong> Your shop goes live, the first wave of UGC content is published, and we launch initial ad campaigns to drive early traffic and sales data. You get a dedicated account manager and a live dashboard from day one.
                       </AccordionContent>
                     </AccordionItem>
@@ -434,10 +429,10 @@ const PageContent = () => {
                       data-animate="faq-item"
                       className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                     >
-                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
-                          <span className="font-semibold">How do you measure success and what kind of reporting can I expect?</span>
+                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300 text-base sm:text-lg">
+                          <span className="font-semibold text-left">How do you measure success and what kind of reporting can I expect?</span>
                       </AccordionTrigger>
-                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
+                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300 text-left">
                         Success is measured against clear KPIs we set together, primarily focusing on Gross Merchandise Value (GMV), Return on Ad Spend (ROAS), and customer acquisition cost (CAC). You'll receive access to a live, 24/7 dashboard showing performance across the funnel—from creator content views to shop conversion rates. We also provide weekly summary reports with key insights and a monthly strategic review to discuss performance and plan for the upcoming month. Transparency is key; you'll see every number, every day.
                       </AccordionContent>
                     </AccordionItem>
@@ -447,10 +442,10 @@ const PageContent = () => {
                       data-animate="faq-item"
                       className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                     >
-                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
-                        <span className="font-semibold">My brand is already on TikTok Shop but we're not seeing growth. How can you help?</span>
+                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300 text-base sm:text-lg">
+                        <span className="font-semibold text-left">My brand is already on TikTok Shop but we're not seeing growth. How can you help?</span>
                       </AccordionTrigger>
-                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
+                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300 text-left">
                         This is a common challenge. We'd start with our comprehensive TikTok Shop Audit. This process analyzes every aspect of your current setup: product feed optimization, creator content performance, ad campaign structure, and shop page conversion funnels. We identify key friction points and growth levers. From there, we'll propose a targeted 90-day growth plan focused on the highest-impact areas, whether it's revitalizing your creator strategy, scaling your ad spend with better creatives, or optimizing your shop for higher conversion rates.
                       </AccordionContent>
                     </AccordionItem>
@@ -460,10 +455,10 @@ const PageContent = () => {
                       data-animate="faq-item"
                       className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                     >
-                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
-                        <span className="font-semibold">How do you find and manage creators for our campaigns?</span>
+                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300 text-base sm:text-lg">
+                        <span className="font-semibold text-left">How do you find and manage creators for our campaigns?</span>
                       </AccordionTrigger>
-                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
+                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300 text-left">
                         We have a private, vetted network of over 60 high-performing TikTok creators across various niches. Our process is data-driven. We match creators to your brand based on audience demographics, engagement rates, and past performance with similar products. We handle all communication, contract negotiations, product seeding, and creative brief management. Our system ensures a consistent flow of authentic, high-quality UGC that resonates with your target audience while you stay focused on your business operations.
                       </AccordionContent>
                     </AccordionItem>
@@ -473,10 +468,10 @@ const PageContent = () => {
                       data-animate="faq-item"
                       className="group rounded-2xl border border-slate-200/80 bg-white px-6 py-1 shadow-lg hover:-translate-y-1 hover:border-cyan-400/60 hover:shadow-xl dark:border-slate-700/60 dark:bg-slate-900/60 dark:hover:border-cyan-500/70"
                     >
-                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300">
-                        <span className="font-semibold">What makes NEXTOK different from other TikTok marketing agencies?</span>
+                      <AccordionTrigger className="text-left text-slate-800 hover:no-underline hover:text-cyan-600 dark:text-slate-100 dark:hover:text-cyan-300 text-base sm:text-lg">
+                        <span className="font-semibold text-left">What makes NEXTOK different from other TikTok marketing agencies?</span>
                       </AccordionTrigger>
-                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300">
+                      <AccordionContent className="pb-4 text-slate-600 dark:text-slate-300 text-left">
                         Three things: <strong>1. We are TikTok Shop specialists.</strong> We don't just do "TikTok marketing"; we live and breathe the Shop ecosystem, from backend setup to affiliate commission structures. <strong>2. We are performance-driven.</strong> Our strategies are built around driving tangible sales (GMV), not just vanity metrics like views or likes. Every action is tied to a commercial outcome. <strong>3. We are your growth partner.</strong> We operate as an extension of your team, providing strategic guidance, transparent reporting, and a clear focus on your long-term success on the platform. We win when you win.
                       </AccordionContent>
                     </AccordionItem>
@@ -492,21 +487,21 @@ const PageContent = () => {
                 <div className="absolute top-0 left-1/4 h-32 w-32 animate-pulse rounded-full bg-white/20 opacity-50"></div>
                 <div className="absolute bottom-0 right-1/4 h-24 w-24 animate-pulse delay-1000 rounded-full bg-white/20 opacity-40"></div>
               </div>
-              <div className="container px-4 md:px-6 relative">
+              <div className="container px-4 md:px-6 relative max-w-4xl mx-auto">
                 <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                  <div className="space-y-2">
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white animate-fade-in">
+                  <div className="space-y-2 text-center">
+                    <h2 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-white animate-fade-in text-center px-4">
                       Ready to Scale Your TikTok Shop?
                     </h2>
-                    <p className="max-w-[600px] text-white/90 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed animate-fade-in-up delay-300">
+                    <p className="max-w-[600px] text-white/90 text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed animate-fade-in-up delay-300 text-center mx-auto px-4">
                       Join the brands that have already transformed their TikTok Shop performance with NEXTOK.
                     </p>
                   </div>
-                  <div className="flex flex-col gap-2 min-[400px]:flex-row animate-fade-in-up delay-500">
+                  <div className="flex flex-col gap-2 min-[400px]:flex-row animate-fade-in-up delay-500 justify-center w-full md:w-auto">
                     <Button
                       size="lg"
                       variant="secondary"
-                      className="bg-white text-slate-900 hover:bg-gray-100 font-semibold shadow-lg hover:shadow-white/25 transition-all duration-300 hover:scale-105 group"
+                      className="bg-white text-slate-900 hover:bg-gray-100 font-semibold shadow-lg hover:shadow-white/25 transition-all duration-300 hover:scale-105 group w-full md:w-auto"
                     >
                       Book a Free Consultation
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -514,7 +509,7 @@ const PageContent = () => {
                     <Button
                       variant="outline"
                       size="lg"
-                      className="border-white text-white hover:bg-white/10 bg-transparent hover:scale-105 transition-all duration-300"
+                      className="border-white text-white hover:bg-white/10 bg-transparent hover:scale-105 transition-all duration-300 w-full md:w-auto"
                     >
                       Email: awais@nextok.io
                       <Mail className="ml-2 h-4 w-4" />
@@ -525,9 +520,9 @@ const PageContent = () => {
             </section>
 
             {/* Footer */}
-            <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-slate-800 bg-slate-950 relative z-10">
-              <p className="text-xs text-slate-600 transition-colors dark:text-slate-400">© {currentYear} NEXTOK. All rights reserved.</p>
-              <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+            <footer className="flex flex-col gap-2 py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-slate-800 bg-slate-950 relative z-10 text-center">
+              <p className="text-xs text-slate-600 transition-colors dark:text-slate-400 text-center">© {currentYear} NEXTOK. All rights reserved.</p>
+              <nav className="flex gap-4 sm:gap-6 justify-center">
               <Link
                 className="text-xs text-slate-500 underline-offset-4 transition-colors hover:text-cyan-600 hover:underline dark:text-slate-400 dark:hover:text-cyan-300"
                 href="#"
